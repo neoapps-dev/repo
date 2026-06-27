@@ -4,17 +4,21 @@ on:
 
 jobs:
   process:
-    if: github.event.review.state == 'approved'
+    if: ${{ github.event.review.state == 'approved' }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: check maintainer
-        run: |
-          grep -qx "${{ github.event.review.user.login }}" maintainers.txt || exit 1
+        run: grep -qx "${{ github.event.review.user.login }}" maintainers.txt || exit 1
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: validate, index, upload, close
+
+      - name: process submission
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SERVER_KEY: ${{ secrets.SERVER_KEY }}
-        run: ./process.sh
+          CF_CLIENT_ID: ${{ secrets.CF_CLIENT_ID }}
+          CF_CLIENT_SECRET: ${{ secrets.CF_CLIENT_SECRET }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: bash process.sh

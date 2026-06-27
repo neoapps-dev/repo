@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: check maintainer
-        run: grep -qx "${{ github.event.review.user.login }}" maintainers.txt || exit 1
+        run: grep -x "${{ github.event.review.user.login }}" maintainers.txt || exit 1
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}

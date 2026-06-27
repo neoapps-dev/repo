@@ -5,6 +5,8 @@ echo "$SERVER_KEY" | base64 -d > ~/.ssh/deploy_key
 chmod 600 ~/.ssh/deploy_key
 curl -sL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared
 chmod +x /usr/local/bin/cloudflared
+head -1 ~/.ssh/deploy_key
+wc -l ~/.ssh/deploy_key
 cloudflared access tcp --hostname ssh.obsidianos.xyz --listener 127.0.0.1:2222 &
 CF_PID=$!
 sleep 2
